@@ -102,12 +102,24 @@
     </div>
 
     <script>
-      // JavaScriptで動作を制御
       const registerBtn = document.getElementById("registerBtn");
       const clearBtn = document.getElementById("clearBtn");
       const parkingNumberInput = document.getElementById("parkingNumber");
       const displayedNumber = document.getElementById("displayedNumber");
       const displayedTime = document.getElementById("displayedTime");
+
+      // --- ここから追加 ---
+      // ページ読み込み時にローカルストレージからデータを読み込む
+      document.addEventListener("DOMContentLoaded", () => {
+        const savedNumber = localStorage.getItem("parkingNumber");
+        const savedTime = localStorage.getItem("parkingTime");
+
+        if (savedNumber && savedTime) {
+          displayedNumber.textContent = savedNumber;
+          displayedTime.textContent = savedTime;
+        }
+      });
+      // --- ここまで追加 ---
 
       // 登録ボタンの処理
       registerBtn.addEventListener("click", () => {
@@ -117,20 +129,23 @@
           return;
         }
 
-        // --- ここから変更 ---
         const now = new Date();
         const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, "0"); // 月は0から始まるため+1
+        const month = String(now.getMonth() + 1).padStart(2, "0");
         const day = String(now.getDate()).padStart(2, "0");
         const hours = String(now.getHours()).padStart(2, "0");
         const minutes = String(now.getMinutes()).padStart(2, "0");
         const seconds = String(now.getSeconds()).padStart(2, "0");
-
         const dateTimeString = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
-        // --- ここまで変更 ---
 
         displayedNumber.textContent = parkingNumber;
-        displayedTime.textContent = dateTimeString; // ラベルなしで日時のみ表示
+        displayedTime.textContent = dateTimeString;
+
+        // --- ここから追加 ---
+        // ローカルストレージにデータを保存
+        localStorage.setItem("parkingNumber", parkingNumber);
+        localStorage.setItem("parkingTime", dateTimeString);
+        // --- ここまで追加 ---
 
         parkingNumberInput.value = "";
       });
@@ -139,6 +154,12 @@
       clearBtn.addEventListener("click", () => {
         displayedNumber.textContent = "";
         displayedTime.textContent = "";
+
+        // --- ここから追加 ---
+        // ローカルストレージのデータを削除
+        localStorage.removeItem("parkingNumber");
+        localStorage.removeItem("parkingTime");
+        // --- ここまで追加 ---
       });
     </script>
   </body>
