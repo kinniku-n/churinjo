@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>駐輪場登録</title>
     <style>
-      /* CSSは変更ありません */
       body {
         font-family: sans-serif;
         display: flex;
@@ -15,6 +14,7 @@
         margin: 0;
         background-color: #f0f2f5;
         flex-direction: column;
+        overflow: hidden;
       }
       .container {
         width: 90%;
@@ -108,8 +108,6 @@
       const displayedNumber = document.getElementById("displayedNumber");
       const displayedTime = document.getElementById("displayedTime");
 
-      // --- ここから追加 ---
-      // ページ読み込み時にローカルストレージからデータを読み込む
       document.addEventListener("DOMContentLoaded", () => {
         const savedNumber = localStorage.getItem("parkingNumber");
         const savedTime = localStorage.getItem("parkingTime");
@@ -119,9 +117,7 @@
           displayedTime.textContent = savedTime;
         }
       });
-      // --- ここまで追加 ---
 
-      // 登録ボタンの処理
       registerBtn.addEventListener("click", () => {
         const parkingNumber = parkingNumberInput.value;
         if (parkingNumber === "") {
@@ -130,36 +126,29 @@
         }
 
         const now = new Date();
-        const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, "0");
         const day = String(now.getDate()).padStart(2, "0");
         const hours = String(now.getHours()).padStart(2, "0");
         const minutes = String(now.getMinutes()).padStart(2, "0");
-        const seconds = String(now.getSeconds()).padStart(2, "0");
-        const dateTimeString = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+
+        // 日付形式を mm/dd hh:mm に変更
+        const dateTimeString = `${month}/${day} ${hours}:${minutes}`;
 
         displayedNumber.textContent = parkingNumber;
         displayedTime.textContent = dateTimeString;
 
-        // --- ここから追加 ---
-        // ローカルストレージにデータを保存
         localStorage.setItem("parkingNumber", parkingNumber);
         localStorage.setItem("parkingTime", dateTimeString);
-        // --- ここまで追加 ---
 
         parkingNumberInput.value = "";
       });
 
-      // クリアボタンの処理
       clearBtn.addEventListener("click", () => {
         displayedNumber.textContent = "";
         displayedTime.textContent = "";
 
-        // --- ここから追加 ---
-        // ローカルストレージのデータを削除
         localStorage.removeItem("parkingNumber");
         localStorage.removeItem("parkingTime");
-        // --- ここまで追加 ---
       });
     </script>
   </body>
